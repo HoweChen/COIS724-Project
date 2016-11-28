@@ -58,12 +58,10 @@ for i in range(len(days)):
 
         if total_seconds >= 1200 and total_distance <= 200:
 
-            print
-            "stay point"
-            print
-            "the time is %s %s" % (str((total_seconds) / 60.), "hours" if ((total_seconds) / 60.) > 60 else "minutes")
-            print
-            "the distance is %s metres" % total_distance
+            print "stay point"
+            print "the time is %s %s" % (
+                str(total_seconds / 60.), "hours" if (total_seconds / 60.) > 60 else "minutes")
+            print "the distance is %s metres" % total_distance
 
             stay_p_lat = total_lat / counter
             stay_p_long = total_long / counter
@@ -90,7 +88,6 @@ for i in range(len(days)):
             total_long = 0
             counter = 0
 
-    print
-    "There are %s stay points for this date" % str(total_stay_points)
+    print "There are %s stay points for this date" % str(total_stay_points)
 
     # remove this break if you want to run all the dates for the user
