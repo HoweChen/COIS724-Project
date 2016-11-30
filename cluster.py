@@ -30,7 +30,7 @@ total_stay_points = np.asarray(total_stay_points)
 # print len(users_list)
 
 # clustering
-tree = dcl.construct_tree(total_stay_points, k=100)
+tree = dcl.construct_tree(total_stay_points, k=50)
 fig = tree.plot(form='density')[0]
 labels = tree.get_clusters()
 # fig.show()
@@ -39,7 +39,6 @@ labels = tree.get_clusters()
 tree_file = open("./Clustering/TBHG.txt", "w")
 tree_str = str(tree)
 tree_file.write(tree_str)
-
 
 # determine the specific user in the each low-level cluster
 cluster_dict = {}
@@ -55,3 +54,26 @@ for k, v in cluster_dict.iteritems():
     cluster_dict[k] = list(set(cluster_dict[k]))
     clusters.write("%s: %s\n" % (str(k), str(cluster_dict[k]).strip('[]')))
 # print cluster_dict
+
+cluster_centroids_file = open("./Clustering/cluster_centroids.txt", "w")
+
+cluster_centroids = {}
+
+for entry in labels:
+    cluster_centroids[entry[1]] = []
+
+for entry in labels:
+    cluster_centroids[entry[1]].append(total_stay_points[entry[0]])
+
+# get the mean of all staypoints in one cluster
+for key, value in cluster_centroids.iteritems():
+    cluster_centroids[key] = np.asarray(cluster_centroids[key], dtype='float32')
+    cluster_centroids[key] = np.mean(cluster_centroids[key], axis=0)
+    # print "the key [%s] has shape %s\n" % (str(key), str(cluster_centroids[key].shape))
+'''
+for k, v in cluster_dict.iteritems():
+    cluster_dict[k] = list(set(cluster_dict[k]))
+'''
+
+for key, value in cluster_centroids.iteritems():
+    cluster_centroids_file.write("%s---> %s\n" % (str(key), str(value).strip('[]')))
