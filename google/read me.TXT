@@ -1,0 +1,12 @@
+1.new.py:use the google map ap to get the information of a geo_location including city,route,postal_code,street_number.(you should download the geolocation package)
+
+2.first.php: transfer the data.txt into data.xml. (to use the google map api easier)
+(http://localhost:63343/untitled1/first.php?_ijt=a87fihqojiavjsv1mnlkueh22d)
+
+3.bgbg.html: do maker on the map.
+
+
+note that,there is still some problem in 1 and 3.
+1:some data is missed.(i think it is because of the google map api do not contain enough data especially in China.(it can get good result in USA))
+
+3:because of 1, some makers are missing.
