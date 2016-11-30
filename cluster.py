@@ -1,10 +1,11 @@
 import debacl as dcl
 import numpy as np
 import matplotlib
+import os
 
 total_stay_points = []
-
-for i in range(0, 6):
+data_count = len(os.walk('./Data/').next()[1])
+for i in range(0, int(data_count)):
     file_name = './StayPoints/00' + str(i) + '.txt'
     stay_points = open(file_name, 'r')
     stay_points = list(stay_points)

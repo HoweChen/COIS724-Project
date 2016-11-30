@@ -1,12 +1,14 @@
 import glob
 import time
 import datetime
+import os
 from geopy.distance import vincenty
 import sys
 
 # user_id = sys.argv[1]
 # user_id = str(001)
-for user_id in range(0,10):
+data_count = len(os.walk('./Data/').next()[1])
+for user_id in range(0, int(data_count)):
     stay_points_file = open("./StayPoints/00" + str(user_id) + ".txt", "w")
 
     data = glob.glob('Data/00' + str(user_id) + '/Trajectory/*.*')
