@@ -8,7 +8,7 @@ import sys
 # user_id = sys.argv[1]
 # user_id = str(001)
 data_count = len(os.walk('./Data/').next()[1])
-for user_id in range(0, int(data_count)):
+for user_id in range(0, int(data_count)+1):
     stay_points_file = open("./StayPoints/00" + str(user_id) + ".txt", "w")
 
     data = glob.glob('Data/00' + str(user_id) + '/Trajectory/*.*')
@@ -65,10 +65,10 @@ for user_id in range(0, int(data_count)):
 
             if total_seconds >= 1200 and total_distance <= 200:
 
-                print "stay point"
-                print "the time is %s %s" % (
-                    str(total_seconds / 60.), "minutes" if (total_seconds / 60.) > 60 else "minutes")
-                print "the distance is %s metres" % total_distance
+                # print "stay point"
+                # print "the time is %s %s" % (
+                #     str(total_seconds / 60.), "minutes" if (total_seconds / 60.) > 60 else "minutes")
+                # print "the distance is %s metres" % total_distance
 
                 stay_p_lat = total_lat / counter
                 stay_p_long = total_long / counter
@@ -95,6 +95,6 @@ for user_id in range(0, int(data_count)):
                 total_long = 0
                 counter = 0
 
-        print "There are %s stay points for this date" % str(total_stay_points)
+        # print "There are %s stay points for this date" % str(total_stay_points)
 
         # remove this break if you want to run all the dates for the user
