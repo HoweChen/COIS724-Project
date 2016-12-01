@@ -25,15 +25,17 @@ for i in range(0, int(data_count)):
     total_stay_points.append(stay_points)
 total_stay_points = [item for sublist in total_stay_points for item in sublist]
 total_stay_points = np.asarray(total_stay_points)
-
-# print total_stay_points.shape
-# print len(users_list)
-
+# write total_stay_points.txt
+total_stay_points_file = open("./Clustering/total_stay_points.txt", "w")
+for itr in total_stay_points:
+    total_stay_points_file.write(str(itr) + "\n")
 # clustering
 tree = dcl.construct_tree(total_stay_points, k=50)
-fig = tree.plot(form='density')[0]
 labels = tree.get_clusters()
-# fig.show()
+# write the Label.txt
+labels_file = open("./Clustering/Label.txt", "w")
+for itr in labels:
+    labels_file.write(str(itr) + "\n")
 
 # write TBHG to the TBHG.txt
 tree_file = open("./Clustering/TBHG.txt", "w")
