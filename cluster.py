@@ -7,9 +7,8 @@ import os
 
 data_count = len(os.walk('./Data/').next()[1])  # count the number of datasets
 users_list = []
-# plt.style.use('grayscale')
+plt.style.use('grayscale')
 total_stay_points = []
-total_stay_points_with_user = {}
 for i in range(0, int(data_count)):
     # open the folder
     file_name = './StayPoints/00' + str(i) + '.txt'
@@ -24,23 +23,16 @@ for i in range(0, int(data_count)):
         users_list.append(i)
     stay_points = np.asarray(stay_points, dtype='float32')
     total_stay_points.append(stay_points)
-    total_stay_points_with_user[str(i)] = stay_points
 total_stay_points = [item for sublist in total_stay_points for item in sublist]
 total_stay_points = np.asarray(total_stay_points)
-print total_stay_points_with_user
-# write down the total_stay_points
-total_stay_points_file = open("./Clustering/total_stay_points.txt", "w")
-for itr in total_stay_points:
-    total_stay_points_file.write(str(itr) + "\n")
+
+# print total_stay_points.shape
+# print len(users_list)
 
 # clustering
 tree = dcl.construct_tree(total_stay_points, k=50)
 fig = tree.plot(form='density')[0]
 labels = tree.get_clusters()
-labels_file = open("./Clustering/Label.txt", "w")
-for itr in labels:
-    labels_file.write(str(itr) + "\n")
-# labels_file.write(str(labels))
 # fig.show()
 
 # write TBHG to the TBHG.txt
@@ -73,7 +65,6 @@ for entry in labels:
 for entry in labels:
     cluster_centroids[entry[1]].append(total_stay_points[entry[0]])
 
-# get the mean of all staypoints in one cluster
 for key, value in cluster_centroids.iteritems():
     cluster_centroids[key] = np.asarray(cluster_centroids[key], dtype='float32')
     cluster_centroids[key] = np.mean(cluster_centroids[key], axis=0)
@@ -85,28 +76,68 @@ for k, v in cluster_dict.iteritems():
 
 for key, value in cluster_centroids.iteritems():
     cluster_centroids_file.write("%s---> %s\n" % (str(key), str(value).strip('[]')))
+'''
+all_users = []
+total_keys = 0
+for key, value in cluster_dict.iteritems():
+    all_users.append(cluster_dict[key])
+    if int(key) > total_keys:
+        total_keys = key
+total_keys += 1 #bypassing array index out of bounds error
 
-# create the matrix for next step
-# all_users = []
-# total_keys = 0
-#
-# for key, value in cluster_dict.iteritems():
-#     all_users.append(cluster_dict[key])
-#     if int(key) > total_keys:
-#         total_keys = key
-#
-# total_keys += 1  # bypassing array index out of bounds error
-#
-# all_users = [item for sublist in all_users for item in sublist]
-# all_users = list(set(all_users))
-# matrix = np.zeros((len(all_users), total_keys))
-#
-# for key, value in cluster_dict.iteritems():
-#     matrix[cluster_dict[key], key] += 1
-#
-# matrix = matrix.tolist()
-#
-# matrix_file = open("matrix.txt", "w")
-#
-# for line in matrix:
-#     matrix_file.write("%s\n" % str(line).strip('[]'))
+all_users = [item for sublist in all_users for item in sublist]
+all_users = list(set(all_users))
+matrix = np.zeros((len(all_users), total_keys))
+for key, value in cluster_dict.iteritems():
+    matrix[cluster_dict[key], key] += 1
+matrix = matrix.tolist()
+matrix_file = open("matrix.txt", "w")
+for line in matrix:
+    matrix_file.write("%s\n"% str(line).strip('[]'))
+'''
+import collections
+
+cluster_matrix = {}
+
+for entry in labels:
+    cluster_matrix[entry[1]] = []
+
+for entry in labels:
+    cluster_matrix[entry[1]].append(users_list[entry[0]])
+
+cluster_matrix = collections.OrderedDict(sorted(cluster_matrix.items()))
+
+# print cluster_matrix
+
+count_matrix = {}
+
+all_users = []
+total_keys = 0
+
+for key, value in cluster_dict.iteritems():
+    all_users.append(cluster_dict[key])
+    if int(key) > total_keys:
+        total_keys = key
+
+total_keys += 1  # bypassing array index out of bounds error
+
+all_users = [item for sublist in all_users for item in sublist]
+all_users = list(set(all_users))
+matrix = np.zeros((len(all_users), total_keys))
+
+mask = []
+
+for k, v in cluster_matrix.iteritems():
+    count_matrix[k] = str(collections.Counter(cluster_matrix[k]))
+    count_matrix[k] = count_matrix[k][7:].strip('({})').split(',')
+    count_matrix[k] = [c_m.split(':') for c_m in count_matrix[k]]
+    for arr in count_matrix[k]:
+        matrix[int(arr[0])][k] = arr[1]
+
+matrix = matrix.tolist()
+
+matrix_file = open("./Clustering/Matrix.txt", "w")
+
+for line in matrix:
+    matrix_file.write("%s\n" % str(line).strip('[]'))
+    # print count_matrix
